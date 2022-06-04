@@ -3,8 +3,68 @@ from utils import ExpExperiments
 
 random_seed = list(range(1))
 
-__all__ = ['GroupInfluence', 'IncrementalRetraining', 'TrainClassifier']
+__all__ = ['GroupInfluence', 'IncrementalRetraining', 'TrainClassifier',
+           'MemInference', ]
 
+
+class MemInference(ExpExperiments):
+    def __new__(cls, *args, **kwargs):
+        cls.name = "Models for membership inference"
+        cls.experiment_fn = 'mem_inference'
+        grid_params = []
+
+        n_spurious = [1, 3, 5, 10, 20, 100, 1000]
+        seeds = range(10)
+        datasets = ["memmnist", "memfashion"]
+        for spu in ['v20']:
+            for i in n_spurious:
+                for digit in [0, 1]:
+                    for rs in seeds:
+                        datasets.append(f'memmnist{spu}-{i}-{digit}-{rs}')
+                        datasets.append(f'memfashion{spu}-{i}-{digit}-{rs}')
+
+        base_params = {
+            'dataset': datasets,
+            'model': [f'ce-tor-LargeMLP', ],
+            'batch_size': [128],
+            'epochs': [70],
+            'weight_decay': [0.],
+            'random_seed': list(range(1)),
+        }
+        grid_params.append(dict(
+            optimizer=['adam'], momentum=[0.0], **base_params,
+        ))
+        grid_params.append(dict(
+            optimizer=['sgd'], momentum=[0.9], **base_params,
+        ))
+
+        seeds = range(10)
+        n_spurious = [1, 3, 5, 10, 20, 100, 500, 1000]
+        datasets = ['memcifar10']
+        for spu in ['v20']:
+            for i in n_spurious:
+                for digit in [0, 1]:
+                    for rs in seeds:
+                        datasets.append(f'memcifar10{spu}-{i}-{digit}-{rs}')
+
+        base_params = {
+            'dataset': datasets,
+            'batch_size': [128],
+            'model': [f'aug01-ce-tor-altResNet20Norm02'],
+            #'weight_decay': [0., 1e-4],
+            'weight_decay': [0.],
+            'epochs': [70],
+            'random_seed': list(range(1)),
+        }
+        grid_params.append(dict(
+            optimizer=['sgd'], momentum=[0.9], learning_rate=[0.1], **base_params,
+        ))
+        grid_params.append(dict(
+            optimizer=['adam'], momentum=[0.], learning_rate=[0.01], **base_params,
+        ))
+
+        cls.grid_params = grid_params
+        return ExpExperiments.__new__(cls, *args, **kwargs)
 
 class GroupInfluence(ExpExperiments):
     def __new__(cls, *args, **kwargs):

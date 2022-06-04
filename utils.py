@@ -26,6 +26,7 @@ def setup_experiments(auto_var):
     _register_experiment(auto_var, 'train_classifier')
     _register_experiment(auto_var, 'incremental_retraining')
     _register_experiment(auto_var, 'group_influence')
+    _register_experiment(auto_var, 'mem_inference')
 
     #exp_name = 'exp_name'
     #mkdir_p(f"./results/{exp_name}")

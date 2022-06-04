@@ -5,24 +5,11 @@ This repository contains the code of the experiments in the paper
 
 [Understanding Rare Spurious Correlations in Neural Network](https://arxiv.org/abs/2202.05189)
 
-Authors: [Yao-Yuan Yang](https://github.com/yangarbiter/), [Kamalika Chaudhuri](http://cseweb.ucsd.edu/~kamalika/)
+Authors: [Yao-Yuan Yang](https://github.com/yangarbiter/), [Chi-Ning Chou](https://cnchou.github.io/), [Kamalika Chaudhuri](http://cseweb.ucsd.edu/~kamalika/)
 
 ## Abstract
 
-Neural networks are known to use spurious correlations for classification; for
-example, they commonly use background information to classify objects.
-But how many examples does it take for a network to pick up these correlations?
-This is the question that we empirically investigate in this work.
-We introduce spurious patterns correlated with a specific class to a few
-examples and find that it takes only a handful of such examples for the network
-to pick up on the spurious correlation.
-Through extensive experiments, we show that (1) spurious patterns with a larger
-$\ell_2$ norm are learnt to correlate with the specified class more easily; (2)
-network architectures that are more sensitive to the input are more susceptible
-to learning these rare spurious correlations; (3) standard data deletion
-methods, including incremental retraining and influence functions, are unable to
-forget these rare spurious correlations through deleting the examples that cause
-these spurious correlations to be learnt.
+Neural networks are known to use spurious correlations such as background information for classification. While prior work has looked at spurious correlations that are widespread in the training data, in this work, we investigate how sensitive neural networks are to *rare* spurious correlations, which may be harder to detect and correct, and may lead to privacy leaks. We introduce spurious patterns correlated with a fixed class to a few training examples and find that it takes only a handful of such examples for the network to learn the correlation. Furthermore, these rare spurious correlations also impact accuracy and privacy. We empirically and theoretically analyze different factors involved in rare spurious correlations and propose mitigation methods accordingly. Specifically, we observe that $\ell_2$ regularization and adding Gaussian noise to inputs can reduce the undesirable effects.
 
 ---
 
@@ -36,7 +23,9 @@ pip3 install -r requirements.txt
 ## Scripts
 
 - [notebooks/rare_spurious_correlation.ipynb](notebooks/rare_spurious_correlation.ipynb): compute the spurious scores
-- [notebooks/visualize_weight.ipynb](notebooks/visualize_weight.ipynb): generates Figure 5
+- [notebooks/visualize_weight.ipynb](notebooks/visualize_weight.ipynb): visualize MLP weights
+- [notebooks/membership_inference.ipynb](notebooks/membership_inference.ipynb): generates membership inference attack results
+- [notebooks/regularization.ipynb](notebooks/regularization.ipynb): generates results for using regularization methods to mitigate rare spurious correlations
 
 ## Usage
 
@@ -44,7 +33,8 @@ pip3 install -r requirements.txt
 
 - `train_classifier`: train a classifier ([implementation](experiments/train_classifier.py))
 - `group_infulence`: remove spurious examples from a model using group influence ([implementation](experiments/group_influence.py))
-- `incremental_retraining`: remove spurious examples from a model using incremental retraining ([implementation](experiments/incremental_retraining.py)
+- `incremental_retraining`: remove spurious examples from a model using incremental retraining ([implementation](experiments/incremental_retraining.py))
+- `mem_inference`: train the models for membership inference attack ([implementation](experiments/mem_inference.py))
 
 ### Model options
 
@@ -111,7 +101,7 @@ For more experimental and technical details, please check our [paper](https://ar
 ```bibtex
 @article{yang2022understanding,
   title={Understanding Rare Spurious Correlations in Neural Network},
-  author={Yao-Yuan Yang and Kamalika Chaudhuri},
+  author={Yao-Yuan Yang and Chi-Ning Chou and Kamalika Chaudhuri},
   journal={arXiv preprint arXiv:2202.05189},
   year={2022}
 }
